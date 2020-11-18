@@ -22,7 +22,7 @@ const executePayment = async (paymentId, payerId) => {
 }
 
 module.exports = async (request, response) => {
-    const json = response.body
+    const json = request.body
     if (json.event_type == 'PAYMENTS.PAYMENT.CREATED') {
         const paymentId = json.resource.id
         const payerId = json.resource.payer.payer_info.payer_id

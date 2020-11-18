@@ -45,10 +45,10 @@ const createPayment = async (currency, amount) => {
 }
 
 module.exports = async (request, response) => {
-    const currency = request.query.currency
-    const amount = request.query.amount
     try {
-        const link = await createPayment()
+        const currency = request.query.currency
+        const amount = request.query.amount
+        const link = await createPayment(currency, amount)
         response.status(200).send({link})
     } catch(error) {
         response.status(500).send(error)
