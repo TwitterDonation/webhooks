@@ -8,7 +8,7 @@ paypal.configure({
     'client_secret': config.paypal.client_secret
 })
 
-const createPayment = async () => {
+const createPayment = async (currency, amount) => {
     const options = {
         'intent': 'sale',
         'payer': {
@@ -20,8 +20,8 @@ const createPayment = async () => {
         },
         'transactions': [{
             'amount': {
-                'currency': 'EUR',
-                'total': '0.01'
+                'currency': currency,
+                'total': amount
             },
             'description': 'Twitter #Codechella 2020'
         }]
@@ -45,6 +45,8 @@ const createPayment = async () => {
 }
 
 module.exports = async (request, response) => {
+    const currency = request.query.currency
+    const amount = request.query.amount
     try {
         const link = await createPayment()
         response.status(200).send({link})

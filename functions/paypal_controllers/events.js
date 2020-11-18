@@ -22,12 +22,17 @@ const executePayment = async (paymentId, payerId) => {
 }
 
 module.exports = async (request, response) => {
-    const paymentId = request.body.payment_id
-    const payerId = request.body.paymer_id
-    try {
-        const payment = await executePayment(paymentId, payerId)
-        response.status(200).send(payment)
-    } catch(error) {
-        response.status(500).send(error)
+    const json = response.body
+    if (json.event_type == 'PAYMENTS.PAYMENT.CREATED') {
+        const paymentId = json.resource.id
+        const payerId = json.resource.payer.payer_info.payer_id
+        try {
+            const payment = await executePayment(paymentId, payerId)
+            response.status(200).send(payment)
+        } catch(error) {
+            response.status(500).send(error)
+        }
+    } else {
+        response.status(403).end()
     }
 }
