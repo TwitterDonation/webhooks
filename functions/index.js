@@ -7,10 +7,13 @@ const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
-app.get('/', require('./controllers/verification'))
-app.post('/', require('./controllers/events'))
+app.get('/twitter', require('./twitter_controllers/crc'))
+app.post('/twitter', require('./twitter_controllers/events'))
 
-exports.twitterWebhook = functions.https.onRequest(app)
+app.get('/paypal/create', require('./paypal_controllers/create_payment'))
+app.get('/paypal/execute', require('./paypal_controllers/execute_payment'))
+
+exports.webhooks = functions.https.onRequest(app)
 
 // process.env.twitter.app_id
 // process.env.twitter.api_key
