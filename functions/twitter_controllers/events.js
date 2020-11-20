@@ -36,9 +36,9 @@ const tweetReply = async (status, in_reply_to_status_id) => {
             }
         })
     })
-}v
+}
 
-module.exports = (request, response) => {
+module.exports = async (request, response) => {
     const json = request.body
     if (json.tweet_create_events) {
         const object = json.tweet_create_events
