@@ -2,7 +2,7 @@ const request = require('request')
 require('dotenv').config()
 
 const request_options = {
-    url: 'https://api.twitter.com/1.1/account_activity/all/prod/webhooks.json',
+    url: `https://api.twitter.com/1.1/account_activity/all/${process.env.TWITTER_ENVIRONMENT_LABEL}/webhooks.json`,
     oauth: {
         consumer_key: process.env.TWITTER_CONSUMER_KEY,
         consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
