@@ -2,7 +2,7 @@ const request = require('request')
 const functions = require('firebase-functions')
 
 const config = functions.config()
-const re = new RegExp(/^@DonationBot (?<currency>[\$\€\£])(?<amount>\d+) @\S+$/)
+const re = new RegExp(/^@make_donation (?<currency>[\$\€\£])(?<amount>\d+) @\S+$/)
 const currencyMap = {
     '$': 'USD',
     '€': 'EUR',
@@ -53,7 +53,7 @@ module.exports = async (request, response) => {
             const senderScreenName = object.user.screen_name
             if (accounts.length !== 2) {
                 try {
-                    const msg = `@${senderScreenName} You need to specify a valid recipient!`
+                    const msg = `@${senderScreenName} You need to specify a (single) recipient! ✨`
                     await tweetReply(msg, object.id_str)
                 } catch (error) {
                     functions.logger.log(error)
@@ -67,7 +67,7 @@ module.exports = async (request, response) => {
             const recipientId = ids.pop()
             if (ids.length > 0 || !recipientId || recipientId == object.user.id_str) {
                 try {
-                    const msg = `@${senderScreenName} You cannot donate to me (unfortunately) or to yourself...`
+                    const msg = `@${senderScreenName} You cannot donate to me or to yourself... 😭`
                     await tweetReply(msg, object.id_str)
                 } catch (error) {
                     functions.logger.log(error)
@@ -80,7 +80,7 @@ module.exports = async (request, response) => {
             const matches = re.exec(object.text)
             if (!matches) {
                 try {
-                    const msg = `@${senderScreenName} Wrong Tweet formatting!`
+                    const msg = `@${senderScreenName} Wrong Tweet formatting! 💥`
                     await tweetReply(msg, object.id_str)
                 } catch (error) {
                     functions.logger.log(error)
@@ -94,7 +94,7 @@ module.exports = async (request, response) => {
             const currency = currencyMap[matches.groups.currency]
             try {
                 // Paypal: transfer `amount` of `currency` to `recipientId`
-                const msg = `@${senderScreenName} Understood! 👌💸🎉`
+                const msg = `@${senderScreenName} You just donated! 💸👌🎉✨❤`
                 await tweetReply(msg, object.id_str)
             } catch (error) {
                 functions.logger.log(error)
