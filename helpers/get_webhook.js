@@ -14,6 +14,6 @@ const request_options = {
     }
 }
 
-request.get(request_options, function (error, response, body) {
+request.get(request_options, (error, response, body) => {
     console.log(body)
 })

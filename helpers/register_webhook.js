@@ -17,6 +17,6 @@ const request_options = {
     }
 }
 
-request.post(request_options, function (error, response, body) {
+request.post(request_options, (error, response, body) => {
     console.log(body)
 })
