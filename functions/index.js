@@ -10,7 +10,7 @@ app.use(bodyParser.json())
 app.get('/twitter', require('./twitter_controllers/crc'))
 app.post('/twitter', require('./twitter_controllers/events'))
 
-app.get('/paypal/create', require('./paypal_controllers/create_payment'))
+app.get('/paypal', require('./paypal_controllers/create_payment'))
 app.post('/paypal', require('./paypal_controllers/events'))
 
 exports.webhook = functions.https.onRequest(app)

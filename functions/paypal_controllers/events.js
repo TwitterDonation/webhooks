@@ -44,7 +44,7 @@ const updateUserBalance = async (userId, currency, total, fees) => {
 
 module.exports = async (request, response) => {
     const json = request.body
-    if (json.event_type != 'PAYMENTS.PAYMENT.CREATED') {
+    if (json.event_type !== 'PAYMENTS.PAYMENT.CREATED') {
         response.sendStatus(404)
         return
     }
