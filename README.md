@@ -11,5 +11,5 @@ firebase functions:config:set twitter.token="TOKEN"
 firebase functions:config:set twitter.token_secret="TOKEN_SECRET"
 firebase functions:config:set paypal.client_id="CLIENT_ID"
 firebase functions:config:set paypal.client_secret="CLIENT_SECRET"
-firebase deploy
+firebase deploy --only functions
 ```
