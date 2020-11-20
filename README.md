@@ -1,4 +1,8 @@
-# Twitter #Codechella Hackathon 2020
+# Twitter Donation Bot Webhooks
+
+This repository contains the code for serverless functions hosted on Firebse that are triggered by the Twitter Account Activity API.
+
+The bot listens for @mentions with the correct message formatting then makes requests using the PayPal API to transfer funds.
 
 ```
 firebase functions:config:set twitter.consumer_key="CONSUMER_KEY"
