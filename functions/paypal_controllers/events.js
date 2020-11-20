@@ -33,6 +33,6 @@ module.exports = async (request, response) => {
             response.status(500).send(error)
         }
     } else {
-        response.status(403).end()
+        response.sendStatus(403)
     }
 }
