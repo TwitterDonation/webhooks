@@ -63,7 +63,7 @@ module.exports = async (request, response) => {
                 }
             }
 
-            const ids = accounts.filter(acc => acc.id_str !== botId)
+            const ids = accounts.map(acc => acc.id_str).filter(id => id !== botId)
             const recipientId = ids.pop()
             if (ids.length > 0 || !recipientId || recipientId == object.user.id_str) {
                 try {
