@@ -45,12 +45,15 @@ module.exports = async (request, response) => {
 
     if (json.tweet_create_events) {
         for (object of json.tweet_create_events) {
+            if (botId === object.user.id_str) {
+                continue
+            }
+
             const accounts = object.entities.user_mentions
             const senderScreenName = object.user.screen_name
-
             if (accounts.length !== 2) {
                 try {
-                    const msg = `@${senderScreenName} You need to specify a valid recipient! Use the following syntax: "@DonationBot $5 @${senderScreenName}".`
+                    const msg = `@${senderScreenName} You need to specify a valid recipient!`
                     await tweetReply(msg, object.id_str)
                 } catch (error) {
                     functions.logger.log(error)
@@ -77,7 +80,7 @@ module.exports = async (request, response) => {
             const matches = re.exec(object.text)
             if (!matches) {
                 try {
-                    const msg = `@${senderScreenName} Wrong Tweet formatting! Use the following syntax: "@DonationBot $5 @${senderScreenName}".`
+                    const msg = `@${senderScreenName} Wrong Tweet formatting!`
                     await tweetReply(msg, object.id_str)
                 } catch (error) {
                     functions.logger.log(error)
@@ -89,7 +92,6 @@ module.exports = async (request, response) => {
 
             const amount = matches.groups.amount
             const currency = currencyMap[matches.groups.currency]
-
             try {
                 // Paypal: transfer `amount` of `currency` to `recipientId`
                 const msg = `@${senderScreenName} Understood! 👌💸🎉`
