@@ -40,6 +40,8 @@ const tweetReply = async (status, in_reply_to_status_id) => {
 
 module.exports = async (request, response) => {
     const json = request.body
+    functions.logger.log(json)
+
     if (json.tweet_create_events) {
         const object = json.tweet_create_events
         const accounts = object.entities.user_mentions
