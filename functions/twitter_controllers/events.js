@@ -51,12 +51,14 @@ module.exports = async (request, response) => {
                 continue
             }
 
+            const tweetId = object.id_str
+
             const accounts = object.entities.user_mentions
             const senderScreenName = object.user.screen_name
             if (accounts.length !== 2) {
                 try {
                     const msg = `@${senderScreenName} You need to specify a (single) recipient! ✨`
-                    await tweetReply(msg, object.id_str)
+                    await tweetReply(msg, tweetId)
                 } catch (error) {
                     functions.logger.log(error)
                 } finally {
@@ -71,7 +73,7 @@ module.exports = async (request, response) => {
             if (ids.length > 0 || !recipientId || recipientId == senderId) {
                 try {
                     const msg = `@${senderScreenName} You cannot donate to me or to yourself... 😭`
-                    await tweetReply(msg, object.id_str)
+                    await tweetReply(msg, tweetId)
                 } catch (error) {
                     functions.logger.log(error)
                 } finally {
@@ -84,7 +86,7 @@ module.exports = async (request, response) => {
             if (!matches) {
                 try {
                     const msg = `@${senderScreenName} Wrong Tweet formatting! 💥`
-                    await tweetReply(msg, object.id_str)
+                    await tweetReply(msg, tweetId)
                 } catch (error) {
                     functions.logger.log(error)
                 } finally {
@@ -98,12 +100,12 @@ module.exports = async (request, response) => {
             try {
                 await makePayout(senderId, recipientId, currency, amount)
                 const msg = `@${senderScreenName} You just donated! 💸👌🎉✨❤`
-                await tweetReply(msg, object.id_str)
+                await tweetReply(msg, tweetId)
             } catch (error) {
                 if (error === -1) {
-                    await tweetReply('Could not find you or the recipient in our database... 😭', object.id_str)
+                    await tweetReply(`@${senderScreenName} Could not find you or the recipient in our database... 😭`, tweetId)
                 } else if (error === -2) {
-                    await tweetReply('Not enough money... 😭', object.id_str)
+                    await tweetReply(`@${senderScreenName} Not enough money... 😭`, tweetId)
                 }
                 functions.logger.log(error)
             } finally {
