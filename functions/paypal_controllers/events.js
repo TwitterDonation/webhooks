@@ -1,10 +1,8 @@
-const firebaseAdmin = require('firebase-admin')
 const functions = require('firebase-functions')
 const paypal = require('paypal-rest-sdk')
+const {db} = require('../index')
 
 const config = functions.config()
-const app = firebaseAdmin.initializeApp()
-const db = app.firestore()
 
 paypal.configure({
     'mode': 'live',
@@ -61,7 +59,6 @@ module.exports = async (request, response) => {
             return
         }
 
-        const payerId = payment.payer.payer_info.payer_id
         const sale = payment.transactions[0].related_resources[0].sale
         const currency = sale.amount.currency
         const total = parseFloat(sale.amount.total)
