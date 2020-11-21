@@ -1,6 +1,11 @@
 const functions = require('firebase-functions')
+const firebaseAdmin = require('firebase-admin')
 const paypal = require('paypal-rest-sdk')
 const config = functions.config()
+
+let app;
+try { app = firebaseAdmin.app() } catch { app = firebaseAdmin.initializeApp() }
+const db = app.firestore()
 
 paypal.configure({
     'mode': 'live',
@@ -37,7 +42,10 @@ const createPayment = async (currency, amount, returnUrl, cancelUrl) => {
             } else {
                 for (var index = 0; index < payment.links.length; index++) {
                     if (payment.links[index].rel === 'approval_url') {
-                        resolve(payment.links[index].href)
+                        resolve({
+                            paymentId: payment.id,
+                            link: payment.links[index].href
+                        })
                         return
                     }
                 }
@@ -47,15 +55,24 @@ const createPayment = async (currency, amount, returnUrl, cancelUrl) => {
     })
 }
 
+const registerUserForLater = async (paymentId, twitterId) => {
+    return db.collection('payments').doc(paymentId).set({
+        twitter_id: twitterId
+    }, {merge: true})
+}
+
 module.exports = async (request, response) => {
     try {
-        const returnUrl = request.query.return_url
-        const cancelUrl = request.query.cancel_url
         const currency = request.query.currency
         const amount = request.query.amount
-        const link = await createPayment(currency, amount, returnUrl, cancelUrl)
+        const returnUrl = request.query.return_url
+        const cancelUrl = request.query.cancel_url
+        const twitterId = request.query.twitter_id
+        const {paymentId, link} = await createPayment(currency, amount, returnUrl, cancelUrl)
+        await registerUserForLater(paymentId, twitterId)
         response.status(200).send({link})
     } catch(error) {
         response.status(500).send(error)
+        functions.logger.error(error)
     }
 }
