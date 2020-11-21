@@ -24,7 +24,10 @@ const createPayment = async (currency, amount) => {
                 'total': amount
             },
             'description': 'Twitter #Codechella 2020'
-        }]
+        }],
+        'application_context': {
+            'shipping_preference': 'NO_SHIPPING'
+        }
     }
 
     return new Promise((resolve, reject) => {
