@@ -17,6 +17,8 @@ const makePayPalTransfer = async (senderPayPalId, recipientPayPalId, currency, a
     // TODO: PayPal transfer
     // The way it is setup we won't use `senderPayPalId`, since we're going
     // to transfer money from the bot account to the `recipientPayPalId`
+    // PayPal is verifying our bank details, calling the API won't work for now...
+    // we'll just `return true` and pretend it's done.
     return true
 }
 
