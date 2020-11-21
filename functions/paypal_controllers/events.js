@@ -26,6 +26,16 @@ const executePayment = async (paymentId, payerId) => {
     })
 }
 
+const createUserFolderIfNotExist = async (paymentId, payerId) => {
+    return db.collection('payments').doc(paymentId).get()
+        .then(doc => {
+            const twitterId = doc.data().twitter_id
+            return db.collection('users').doc(payerId).set({
+                twitter_id: twitterId
+            }, {merge: true})
+        })
+}
+
 const updateUserBalance = async (userId, currency, total, fees) => {
     const ref = db.collection('users').doc(userId)
     return ref.get()
@@ -66,6 +76,7 @@ module.exports = async (request, response) => {
         const currency = sale.amount.currency
         const total = parseFloat(sale.amount.total)
         const fees = parseFloat(sale.transaction_fee.value)
+        await createUserFolderIfNotExist(paymentId, payerId)
         await updateUserBalance(payerId, currency, total, fees)
         response.sendStatus(200)
     } catch(error) {
