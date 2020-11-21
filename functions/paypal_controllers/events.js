@@ -49,6 +49,8 @@ module.exports = async (request, response) => {
         return
     }
 
+    functions.logger.log(json)
+
     const paymentId = json.resource.id
     const payerId = json.resource.payer.payer_info.payer_id
     try {
