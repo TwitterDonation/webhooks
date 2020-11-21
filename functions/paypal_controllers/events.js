@@ -54,7 +54,8 @@ module.exports = async (request, response) => {
     try {
         const payment = await executePayment(paymentId, payerId)
         if (payment.httpStatusCode !== 200) {
-            response.status(500).send('Could not execute transaction')
+            response.sendStatus(404)
+            functions.logger.error('Could not execute payment', payment)
             return
         }
 
@@ -63,13 +64,10 @@ module.exports = async (request, response) => {
         const currency = sale.amount.currency
         const total = parseFloat(sale.amount.total)
         const fees = parseFloat(sale.transaction_fee.value)
-        try {
-            await updateUserBalance(payerId, currency, total, fees)
-            response.status(200).end()
-        } catch(error) {
-            response.status(500).send(error)
-        }
+        await updateUserBalance(payerId, currency, total, fees)
+        response.sendStatus(200)
     } catch(error) {
         response.status(500).send(error)
+        functions.logger.error(error)
     }
 }
