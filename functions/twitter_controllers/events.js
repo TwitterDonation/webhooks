@@ -3,8 +3,8 @@ const functions = require('firebase-functions')
 const makePayout = require('../paypal_controllers/payout')
 const config = functions.config()
 
-// Only USD is allowed for now, to avoid currency conversion...
-const re = new RegExp(/^@make_donation (?<currency>[\$])(?<amount>\d+) @\S+$/)
+// Only EUR is allowed for now, to avoid currency conversion...
+const re = new RegExp(/^@make_donation (?<currency>[\€])(?<amount>\d+) @\S+$/)
 const currencyMap = {
     '$': 'USD',
     '€': 'EUR',
