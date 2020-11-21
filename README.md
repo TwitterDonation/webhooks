@@ -1,6 +1,6 @@
 # Twitter Donation Webhooks
 
-This repository contains the code for serverless functions hosted on Firebase that are triggered by the Twitter Account Activity API.
+This repository contains the code for serverless functions hosted on Firebase that are triggered by the Twitter Account Activity API and by the PayPal API.
 
 The bot listens for *@mentions* with the correct message formatting then makes requests using the PayPal API to transfer funds.
 
