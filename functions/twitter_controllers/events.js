@@ -1,8 +1,10 @@
 const request = require('request')
 const functions = require('firebase-functions')
-
+const makePayout = require('../paypal_controllers/payout')
 const config = functions.config()
-const re = new RegExp(/^@make_donation (?<currency>[\$\€\£])(?<amount>\d+) @\S+$/)
+
+// Only USD is allowed for now, to avoid currency conversion...
+const re = new RegExp(/^@make_donation (?<currency>[\$])(?<amount>\d+) @\S+$/)
 const currencyMap = {
     '$': 'USD',
     '€': 'EUR',
@@ -65,7 +67,8 @@ module.exports = async (request, response) => {
 
             const ids = accounts.map(acc => acc.id_str).filter(id => id !== botId)
             const recipientId = ids.pop()
-            if (ids.length > 0 || !recipientId || recipientId == object.user.id_str) {
+            const senderId = object.user.id_str
+            if (ids.length > 0 || !recipientId || recipientId == senderId) {
                 try {
                     const msg = `@${senderScreenName} You cannot donate to me or to yourself... 😭`
                     await tweetReply(msg, object.id_str)
@@ -90,13 +93,18 @@ module.exports = async (request, response) => {
                 }
             }
 
-            const amount = matches.groups.amount
+            const amount = parseFloat(matches.groups.amount)
             const currency = currencyMap[matches.groups.currency]
             try {
-                // Paypal: transfer `amount` of `currency` to `recipientId`
+                await makePayout(senderId, recipientId, currency, amount)
                 const msg = `@${senderScreenName} You just donated! 💸👌🎉✨❤`
                 await tweetReply(msg, object.id_str)
             } catch (error) {
+                if (error === -1) {
+                    await tweetReply('Could not find you or the recipient in our database... 😭', object.id_str)
+                } else if (error === -2) {
+                    await tweetReply('Not enough money... 😭', object.id_str)
+                }
                 functions.logger.log(error)
             } finally {
                 response.sendStatus(200)
