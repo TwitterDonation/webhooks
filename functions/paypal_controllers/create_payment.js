@@ -8,15 +8,15 @@ paypal.configure({
     'client_secret': config.paypal.client_secret
 })
 
-const createPayment = async (currency, amount) => {
+const createPayment = async (currency, amount, returnUrl, cancelUrl) => {
     const options = {
         'intent': 'sale',
         'payer': {
             'payment_method': 'paypal'
         },
         'redirect_urls': {
-            'return_url': 'https://aflak.me',
-            'cancel_url': 'https://aflak.me'
+            'return_url': returnUrl,
+            'cancel_url': cancelUrl
         },
         'transactions': [{
             'amount': {
@@ -49,9 +49,11 @@ const createPayment = async (currency, amount) => {
 
 module.exports = async (request, response) => {
     try {
+        const returnUrl = request.query.return_url
+        const cancelUrl = request.query.cancel_url
         const currency = request.query.currency
         const amount = request.query.amount
-        const link = await createPayment(currency, amount)
+        const link = await createPayment(currency, amount, returnUrl, cancelUrl)
         response.status(200).send({link})
     } catch(error) {
         response.status(500).send(error)
