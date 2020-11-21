@@ -12,5 +12,6 @@ app.post('/twitter', require('./twitter_controllers/events'))
 
 app.get('/paypal', require('./paypal_controllers/create_payment'))
 app.post('/paypal', require('./paypal_controllers/events'))
+app.post('/paypal/register', require('./paypal_controllers/register_user'))
 
 exports.webhook = functions.https.onRequest(app)

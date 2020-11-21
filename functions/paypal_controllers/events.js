@@ -1,6 +1,6 @@
 const functions = require('firebase-functions')
-const paypal = require('paypal-rest-sdk')
 const firebaseAdmin = require('firebase-admin')
+const paypal = require('paypal-rest-sdk')
 
 let app;
 try { app = firebaseAdmin.app() } catch { app = firebaseAdmin.initializeApp() }
