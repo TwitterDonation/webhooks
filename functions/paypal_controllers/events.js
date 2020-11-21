@@ -1,7 +1,9 @@
 const functions = require('firebase-functions')
 const paypal = require('paypal-rest-sdk')
-const {db} = require('../index')
+const firebaseAdmin = require('firebase-admin')
 
+let db;
+try { db = firebaseAdmin.app() } catch { db = firebaseAdmin.initializeApp() }
 const config = functions.config()
 
 paypal.configure({
