@@ -1,4 +1,4 @@
-# Twitter Donation Bot Webhooks
+# Twitter Donation Webhooks
 
 This repository contains the code for serverless functions hosted on Firebase that are triggered by the Twitter Account Activity API.
 
